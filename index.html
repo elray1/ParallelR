@@ -4,10 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Physical Activity Classification with Hidden Markov Models</title>
+		<title>Parallel Computation with R</title>
 
 		<meta name="description" content="">
-		<meta name="author" content="Evan L. Ray">
+		<meta name="author" content="Isabelle Beaudry, Evan L. Ray">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -45,38 +45,61 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h2 style = "margin-top:5cm">Physical Activity Classification with Hidden Markov Models</h2>
+					<h2 style = "margin-top:5cm">Parallel Computation with R</h2>
 					
 					<p>
+						Isabelle Beaudry, 
 						Evan L. Ray
 					</p>
 					<p>
 						University of Massachusetts, Amherst
 					</p>
 					<p>
-						April 18, 2014
+						April 14, 2014
 					</p>
 				</section>
 
 				<section>
-					<h3>Motivation</h3>
-
-					<div>
-						<img src="images/NPRArticle.png"/>
-					</div>
+					<h3>Outline</h3>
+					<ol>
+						<li>Some context: options when your code is slow</li>
+						<li>Parallel computing with R: One computer, multiple cores
+							<ul>
+								<li>Two packages: snowfall and ****</li>
+								<li>Random number generation</li>
+							</ul>
+						</li>
+						<li>Parallel computing with R: The MGHPCC
+							<ul>
+								<li>Getting access</li>
+								<li>Logistics: connecting, transferring files, and submitting jobs</li>
+							</ul>
+						</li>
+					</ol>
 				</section>
 
 				<section>
-					<h3>Objective:</h2>
+					<h3>So your code runs slowly...</h2>
 					<p>
-						Infer physical activity type from accelerometer data.
+						There are several things to consider:
 					</p>
-					<div style="position:absolute; top:140px; left:0px;">
-						<img src="images/ManniniSubject4AccelerationDetailnotype.png"/>
-					</div>
-					<div class="fragment" style="position:absolute; top:140px; left:0px;">
-						<img src="images/ManniniSubject4AccelerationDetail.png"/>
-					</div>
+					<ul>
+						<li class="fragment"> <span style="font-weight:bold;"> Step 0: </span> Make sure you're getting the right answer.
+							<blockquote cite="Knuth">
+						&ldquo;We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil.&rdquo; -- Donald Knuth
+							</blockquote>
+						</li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 1: </span> Consider using a different algorithm. </li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 2: </span> Consider modifying your R code: for example, ...
+							<ul>
+								<li> use functions like apply instead of for loops (see also the plyr package) </li>
+								<li> use different data structures </li>
+								<li> See Hadley Wickham's wiki for useful discussion </li>
+							</ul>
+						</li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 3 (a): </span> Consider using a faster language for the slow parts. See  </li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 3 (b): </span> Consider parallelizing </li>
+					<ul>
 				</section>
 
 			</div>
