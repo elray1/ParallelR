@@ -237,9 +237,9 @@ registerDoParallel(cl)
 tic3        <-Sys.time() ## start the clock!
 nets        <-create.nets(n.net)
 time3 <- system.time({
-#  est3        <-foreach(i=1:n.net,.packages=c("statnet","RDS"),.combine=cbind) %dopar% {
-  est3        <-foreach(i=1:n.net,.combine=cbind) %dopar% {
-                    library(c("statnet","RDS"))
+  est3        <-foreach(i=1:n.net,.packages=c("statnet","RDS"),.combine=cbind) %dopar% {
+#  est3        <-foreach(i=1:n.net,.combine=cbind) %dopar% {
+#                    library(c("statnet","RDS"))
                    rds.sample3 <-rds.s(nets[[i]])
                    rds.frame   <-create.df(A,rds.sample3,rds.sample3[,2])
                    result      <-RDS.II.estimates(rds.frame,outcome.variable="outcome")$estimate
