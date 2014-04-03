@@ -58,13 +58,19 @@ library("rsprng")
 
 ## Method (1):
 
-init.sprng(nstream = 10, streamno = 0)
+init.sprng(nstream = 10, streamno = 0, seed = 9873499)
+(resa <- runif(5))
+free.sprng()
+
+init.sprng(nstream = 10, streamno = 0, seed = 9873499)
+(resb <- runif(5))
+free.sprng()
 
 res1a <- apply(matrix(seq_len(10) - 1), 1, function(streamno) {
   # initialize an rng stream using default seed, kindprng, and parameters (for default kindprng, parameters is # of lags)
-  init.sprng(nstream = 10, streamno = streamno)
+  init.sprng(nstream = 10, streamno = streamno, seed = 98413551)
   
-  temp <- runif(10)
+  temp <- runif(5)
   
   # free memory allocated by rsprng to store stream states, reset RNGkind to default
   free.sprng()
@@ -74,9 +80,9 @@ res1a <- apply(matrix(seq_len(10) - 1), 1, function(streamno) {
 
 res1b <- apply(matrix(seq_len(10) - 1), 1, function(streamno) {
   # initialize an rng stream using default seed, kindprng, and parameters (for default kindprng, parameters is # of lags)
-  init.sprng(nstream = 10, streamno = streamno)
+  init.sprng(nstream = 10, streamno = streamno, seed = 98413551)
   
-  temp <- runif(10)
+  temp <- runif(5)
   
   # free memory allocated by rsprng to store stream states, reset RNGkind to default
   free.sprng()

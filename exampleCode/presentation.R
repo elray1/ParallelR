@@ -129,7 +129,7 @@ propA      <-0.2              #proportion of node with characteristic A
 hm         <-5                #homophily - characterization based on prob
 
 #~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o
-# Recuiting information
+# Recruiting information
 #~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o
 n.samples   <-2          #THE PROGRAM IS NO LONGER ADAPTED FOR MULTIPLE SAMPLES
 n.seeds     <-10         #number of seeds
@@ -250,23 +250,28 @@ toc3 <- Sys.time() ## start the clock!
 stopCluster(cl)
 
 
+# the following also loads the foreach and parallel packages
+library(doParallel)
 
+# create a "cluster" with 4 cores
+cl <- makeCluster(4)
 
-nCores<-4
-cl <- makeCluster(nCores)
+# set up RNG streams on the cluster nodes using L'Ecuyer-CMRG
+set.seed(9523886)
+clusterSetRNGStream(cl, iseed = c(runif(3, 0, 4294967086), runif(3, 0, 4294944442)))
+
+# register the parallel backend with the foreach package.
 registerDoParallel(cl)
 
-tic34c        <-Sys.time() ## start the clock!
-nets        <-create.nets(n.net)
-time34c <- system.time({
-  est3        <-foreach(i=1:n.net,.packages=c("statnet","RDS"),.combine=cbind) %dopar% {
-    rds.sample3 <-rds.s(nets[[i]])
-    rds.frame   <-create.df(A,rds.sample3,rds.sample3[,2])
-    result      <-RDS.II.estimates(rds.frame,outcome.variable="outcome")$estimate
-  }
-})
-toc34c <- Sys.time() ## start the clock!
-(toc34c-tic34c)
+# execute in parallel
+est3 <- foreach(i = 1:n.net, .packages = c("statnet", "RDS"), .combine = cbind) %dopar% {
+  net <- create.nets(1)
+  rds.sample <- rds.s(net)
+  rds.frame <- create.df(A, rds.sample, rds.sample[, 2])
+  return(RDS.II.estimates(rds.frame, outcome.variable = "outcome")$estimate)
+}
+
+# stop the cluster
 stopCluster(cl)
 
 #~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o
