@@ -65,7 +65,8 @@
 						<li>Some context: options when your code is slow</li>
 						<li>Parallel computing with R: One computer, multiple cores
 							<ul>
-								<li>Two packages: snowfall and ****</li>
+								<li>Overview</li>
+								<li>snowfall and ****</li>
 								<li>Random number generation</li>
 							</ul>
 						</li>
@@ -73,35 +74,57 @@
 							<ul>
 								<li>Getting access</li>
 								<li>Logistics: connecting, transferring files, and submitting jobs</li>
+								<li>MPI</li>
 							</ul>
 						</li>
 					</ol>
 				</section>
 
 				<section>
-					<h3>So your code runs slowly...</h2>
-					<p>
-						There are several things to consider:
-					</p>
+					<h3>So your code runs slowly...</h3>
 					<ul>
 						<li class="fragment"> <span style="font-weight:bold;"> Step 0: </span> Make sure you're getting the right answer.
-							<blockquote cite="Knuth">
-						&ldquo;We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil.&rdquo; -- Donald Knuth
-							</blockquote>
-						</li>
-						<li class="fragment"> <span style="font-weight:bold"> Step 1: </span> Consider using a different algorithm. </li>
-						<li class="fragment"> <span style="font-weight:bold"> Step 2: </span> Consider modifying your R code: for example, ...
 							<ul>
-								<li> use functions like apply instead of for loops (see also the plyr package) </li>
-								<li> use different data structures </li>
-								<li> See Hadley Wickham's wiki for useful discussion </li>
+								<li> <q> &ldquo;We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil.&rdquo; - Donald Knuth </q> </li>
+								<li> Consider unit testing:  See packages Runit and testthat </li>
 							</ul>
 						</li>
-						<li class="fragment"> <span style="font-weight:bold"> Step 3 (a): </span> Consider using a faster language for the slow parts. See  </li>
-						<li class="fragment"> <span style="font-weight:bold"> Step 3 (b): </span> Consider parallelizing </li>
-					<ul>
+						<li class="fragment"> <span style="font-weight:bold"> Step 1: </span> Profile your code to see where it's slow
+							<ul>
+								<li> See ?Rprof and the package profr </li>
+							</ul>
+						</li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 2: </span> Consider using a different algorithm. </li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 3: </span> Consider modifying your R code
+							<ul>
+								<li> Pre-allocate memory </li>
+								<li> Use built-in functions instead of loops </li>
+							</ul>
+						</li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 4 (a): </span> Consider using a faster language for the slow parts.
+							<ul>
+								<li> See package Rcpp </li>
+							</ul>
+						</li>
+						<li class="fragment"> <span style="font-weight:bold"> Step 4 (b): </span> Consider parallelizing </li>
+					</ul>
 				</section>
 
+				<section>
+					<h3>Some General Resources</h3>
+					<ul>
+						<li> Advanced R development, by Hadley Wickham
+							<ul>
+								<li> <a href="http://adv-r.had.co.nz/">http://adv-r.had.co.nz/</a> </li>
+							</ul>
+						</li>
+						<li> 2008 UseR presentation by Dirk Eddelbuettel: 
+							<ul>
+								<li> <a href="http://www.statistik.uni-dortmund.de/useR-2008/tutorials/useR2008introhighperfR.pdf">http://www.statistik.uni-dortmund.de/useR-2008/tutorials/useR2008introhighperfR.pdf</a> </li>
+							</ul>
+						</li>
+					</ul>
+				</section>
 			</div>
 
 		</div>
