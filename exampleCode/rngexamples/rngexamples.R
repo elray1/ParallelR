@@ -1,17 +1,51 @@
 rm(list=ls())
 
-## Reproducability -- set.seed not effective.
+## our example function
+test_fun <- function(vec_lens) {
+  lapply(vec_lens, function(len) runif(len))
+}
+
+# demo function use
+test_fun(1:3)
+
+lens <- list(1:2, 4:5)
+lapply(lens, test_fun)
+
+
+
+## using snowfall + rstream
+library("snowfall")
+library("rstream")
+
+# redefine our example function to use rstream functionality "manually"
+test_fun <- function(vec_lens, rngstream) {
+  lapply(vec_lens,
+    function(len) {
+      
+      runif(len)
+    })
+}
+
+# create an rng stream
+rngstream <- new("rstream.mrg32k3a")
+
+# initialize a local cluster with snowfall
+sfInit( parallel=TRUE, cpus=8, type="SOCK" )
 
 set.seed(1)
-r1a <- runif(10)
+(r3a <- sfSapply(1:10, function(i) runif(1)))
+
 set.seed(1)
-r1b <- runif(10)
+(r3b <- sfSapply(1:10, function(i) runif(1)))
 
-identical(r1a, r1b)
+identical(r3a, r3b)
+
+# stop the cluster
+sfStop()
 
 
 
-
+## doParallel/foreach
 require(doParallel)
 nCores<-8
 cl <- makeCluster(nCores)
@@ -90,7 +124,20 @@ res1b <- apply(matrix(seq_len(10) - 1), 1, function(streamno) {
   return(temp)
 })
 
+res1c <- apply(matrix(seq_len(11) - 1), 1, function(streamno) {
+  # initialize an rng stream using default seed, kindprng, and parameters (for default kindprng, parameters is # of lags)
+  init.sprng(nstream = 11, streamno = streamno, seed = 98413551)
+  
+  temp <- runif(5)
+  
+  # free memory allocated by rsprng to store stream states, reset RNGkind to default
+  free.sprng()
+  
+  return(temp)
+})
+
 identical(res1a, res1b)
+identical(res1a, res1c[, 1:10])
 
 
 ## Using the rlecuyer package
@@ -128,3 +175,47 @@ identical(r1a, r1b)
 
 
 
+
+
+library("rlecuyer")
+
+set.seed(1)
+
+seeds <- c(-1007132623, -549223669, 312902813, 1753239107, -1281266349, 1711070667)
+.lec.SetPackageSeed(seeds)
+.lec.CreateStream(as.character(1:10))
+
+old.rng.stream <- .lec.CurrentStream("1")
+
+(r1a <- runif(10))
+
+.lec.CurrentStreamEnd(old.rng.stream)
+old.rng.stream <- .lec.CurrentStream("2")
+
+(r1b <- runif(10))
+
+.lec.CurrentStreamEnd(old.rng.stream)
+.lec.DeleteStream(as.character(1:10))
+
+
+set.seed(1)
+
+seeds <- c(-1007132623, -549223669, 312902813, 1753239107, -1281266349, 1711070667)
+.lec.SetPackageSeed(seeds)
+.lec.CreateStream(as.character(1:10))
+
+old.rng.stream <- .lec.CurrentStream("1")
+
+(r2a <- runif(10))
+
+.lec.CurrentStreamEnd(old.rng.stream)
+old.rng.stream <- .lec.CurrentStream("2")
+
+(r2b <- runif(10))
+
+.lec.CurrentStreamEnd(old.rng.stream)
+.lec.DeleteStream(as.character(1:10))
+
+
+identical(r1a, r2a)
+identical(r1b, r2b)

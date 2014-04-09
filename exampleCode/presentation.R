@@ -230,7 +230,7 @@ toc2 <- Sys.time() ## end the clock!
 ## Method 3 (parallel computing with doParallel)
 #~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o
 require(doParallel)
-nCores<-8
+nCores<-4
 cl <- makeCluster(nCores)
 registerDoParallel(cl)
 
@@ -257,19 +257,21 @@ library(doParallel)
 cl <- makeCluster(4)
 
 # set up RNG streams on the cluster nodes using L'Ecuyer-CMRG
-set.seed(9523886)
-clusterSetRNGStream(cl, iseed = c(runif(3, 0, 4294967086), runif(3, 0, 4294944442)))
+#set.seed(9523886)
+#clusterSetRNGStream(cl, iseed = c(runif(3, 0, 4294967086), runif(3, 0, 4294944442)))
 
 # register the parallel backend with the foreach package.
 registerDoParallel(cl)
 
 # execute in parallel
-est3 <- foreach(i = 1:n.net, .packages = c("statnet", "RDS"), .combine = cbind) %dopar% {
-  net <- create.nets(1)
-  rds.sample <- rds.s(net)
-  rds.frame <- create.df(A, rds.sample, rds.sample[, 2])
-  return(RDS.II.estimates(rds.frame, outcome.variable = "outcome")$estimate)
-}
+t2b <- system.time({
+  est3 <- foreach(i = 1:n.net, .packages = c("statnet", "RDS"), .combine = cbind) %dopar% {
+    net <- create.nets(1)
+    rds.sample <- rds.s(net)
+    rds.frame <- create.df(A, rds.sample, rds.sample[, 2])
+    return(RDS.II.estimates(rds.frame, outcome.variable = "outcome")$estimate)
+  }
+})
 
 # stop the cluster
 stopCluster(cl)
