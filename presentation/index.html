@@ -63,19 +63,25 @@
 					<h3>Outline</h3>
 					<ol>
 						<li>Some context: options when your code is slow</li>
-						<li>A running example: Network Simulations</li>
+						<li>Two running examples
+							<ul>
+								<li>Generating vectors of random numbers</li>
+								<li>Network simulation</li>
+							</ul>
+						</li>
 						<li>Parallel computing with R: One computer, multiple cores
 							<ul>
 								<li>Overview</li>
-								<li>snowfall and ****</li>
+								<li>foreach with doParallel</li>
+								<li>snowfall</li>
 								<li>Random number generation</li>
 							</ul>
 						</li>
 						<li>Parallel computing with R: The MGHPCC
 							<ul>
+								<li>Overview</li>
 								<li>Getting access</li>
 								<li>Logistics: connecting, transferring files, and submitting jobs</li>
-								<li>MPI</li>
 							</ul>
 						</li>
 					</ol>
@@ -88,12 +94,12 @@
 						<li class="fragment"> <span style="font-weight:bold;"> Step 0: </span> Make sure you're getting the right answer.
 							<ul>
 								<li> <q> &ldquo;We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil.&rdquo; - Donald Knuth </q> </li>
-								<li> Consider unit testing:  See packages Runit and testthat </li>
+								<li> Consider unit testing:  See packages <pre>Runit</pre> and <pre>testthat</pre> </li>
 							</ul>
 						</li>
 						<li class="fragment"> <span style="font-weight:bold"> Step 1: </span> Profile your code to see where it's slow
 							<ul>
-								<li> See ?Rprof and the package profr </li>
+								<li> See <pre>?Rprof</pre> and the package <pre>profr</pre> </li>
 							</ul>
 						</li>
 						<li class="fragment"> <span style="font-weight:bold"> Step 2: </span> Consider using a different algorithm. </li>
@@ -105,7 +111,7 @@
 						</li>
 						<li class="fragment"> <span style="font-weight:bold"> Step 4 (a): </span> Consider using a faster language for the slow parts.
 							<ul>
-								<li> See package Rcpp </li>
+								<li> See package <pre>Rcpp</pre> </li>
 							</ul>
 						</li>
 						<li class="fragment"> <span style="font-weight:bold"> Step 4 (b): </span> Consider parallelizing </li>
@@ -125,11 +131,48 @@
 								<li> <a href="http://www.statistik.uni-dortmund.de/useR-2008/tutorials/useR2008introhighperfR.pdf">http://www.statistik.uni-dortmund.de/useR-2008/tutorials/useR2008introhighperfR.pdf</a> </li>
 							</ul>
 						</li>
+						<li> High performance computing task view on CRAN:
+							<ul>
+								<li> <a href="http://cran.r-project.org/web/views/HighPerformanceComputing.html">http://cran.r-project.org/web/views/HighPerformanceComputing.html</a> </li>
+							</ul>
+						</li>
 					</ul>
 				</section>
 
 				<section>
-					<h3>A running example: network simulations</h3>
+					<h3>Example 1: Generating random numbers</h3>
+					<ul>
+						<li>This is a simple example we'll use to introduce the methods.</li>
+						<pre style="width:1000px; background-color:#ffffff;"><code># Input: len = desired length of output
+# Output: a vector of len random numbers
+test_fun <- function(len) {
+  # sleep 1 second (so that we can detect the benefits of parallelizing)
+  Sys.sleep(1)
+  
+  # generate output value to return
+  rnorm(len)
+}</code></pre>
+<li> Demo function use: </li>
+						<pre style="width:1000px; background-color:#ffffff;"><code>> timea <- system.time({
++   a <- lapply(c(4, 7), test_fun)
++ })
+> 
+> a
+[[1]]
+[1]  0.0003950323 -1.3620880471 -1.1850281389  0.3152729012
+
+[[2]]
+[1] -0.1890080  2.5956099 -0.7272942  0.2347206  0.4028841 -1.0794277 -1.4647725
+
+> timea
+   user  system elapsed 
+      0       0       2</code></pre>
+						<li class="fragment">We want to parallelize the lapply statement.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Example 2: network simulations</h3>
 					<ul>
 						<li> Brief description of example here?
 						</li>
