@@ -102,12 +102,12 @@
 								<li> Use built-in functions instead of loops </li>
 							</ul>
 						</li>
-						<li> <span style="font-weight:bold"> Step 4 (a): </span> Consider using a faster language for the slow parts.
+						<li> <span style="font-weight:bold"> Step 4 (a): </span> Consider parallelizing </li>
+						<li> <span style="font-weight:bold"> Step 4 (b): </span> Consider using a faster language for the slow parts.
 							<ul>
 								<li> See package Rcpp </li>
 							</ul>
 						</li>
-						<li> <span style="font-weight:bold"> Step 4 (b): </span> Consider parallelizing </li>
 					</ul>
 				</section>
 
@@ -200,6 +200,8 @@ for (j in 1:n.net){
 					</ul>
 <pre style="width:1300px; background-color:#ffffff;" class="R"><code class="R">library(snowfall)
 
+# ...load packages, define necessary functions, etc...
+
 # create a cluster with 4 cpus, using sockets for communication
 sfInit(parallel = TRUE, cpus = 4, type = "SOCK")
 
@@ -208,7 +210,6 @@ sfInit(parallel = TRUE, cpus = 4, type = "SOCK")
 sfExportAll()
 
 # load libraries on the cluster nodes
-sfLibrary("rstream", character.only = TRUE)
 sfLibrary("statnet", character.only = TRUE)
 sfLibrary("RDS", character.only = TRUE)
 
@@ -291,7 +292,13 @@ sfStop()</code></pre>
 						<li> We have to register a parallel backend with foreach.</li>
 <div class="fragment">
 						<li> There are many options: doParallel/parallel, doMPI/Rmpi, doMC/multicore, doSNOW/snow </li>
-						<li> We will focus on doRNG:  Ties into doParallel or doMPI to handle parallelization, enables reproducible RNG.
+						<li> We will use the package doRNG for random number generation:
+							<ul>
+								<li> Ties into doParallel or doMPI to handle parallelization
+								</li>
+								<li> Enables reproducible RNG
+								</li>
+							</ul>
 						</li>
 </div>
 					</ul>
